@@ -43,11 +43,12 @@ template Sha256Test(N) {
     log("finish ================");
 }
  
+// TODO Parameterize depth
 // TODO: Treat first iteration separately? For arbitrary input
 // N is the length of the input, K is the number of times to hash
 // Can only declare components inside conditions if condition is known at compile time, so removing k
 template RecursiveShaTest(N) {
-    var depth = 5;
+    var depth = 10;
 
     signal input in[N];
     signal input hash[32];
@@ -80,9 +81,9 @@ template Main() {
     chainedSha.in <== in;
     chainedSha.hash <== hash;
 
-    // FIXME: The final outptu should be the inputed hash!
+    // The final output should be same as the inputed hash
+    hash === chainedSha.out;
     out <== chainedSha.out;
-
 }
 
 component main = Main();
