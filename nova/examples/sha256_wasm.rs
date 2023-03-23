@@ -17,9 +17,9 @@ fn main() {
     let iteration_count = 5;
     let root = current_dir().unwrap();
 
-    let circuit_file = root.join("../circom/sha256_test.r1cs");
+    let circuit_file = root.join("../circom/sha256_test_nova.r1cs");
     let r1cs = load_r1cs(&FileLocation::PathBuf(circuit_file));
-    let witness_generator_wasm = root.join("../circom/sha256_test_js/sha256_test.wasm");
+    let witness_generator_wasm = root.join("../circom/sha256_test_nova_js/sha256_test_nova.wasm");
 
     // TODO Generate this in Rust instead
     let in_vector = vec![
@@ -36,9 +36,12 @@ fn main() {
         vec![241, 53, 135, 188, 137, 254, 72, 130, 199, 200, 137, 48, 37, 17, 255, 215, 56, 209, 54, 18, 155, 159, 91, 228, 196, 146, 203, 73, 72, 169, 58, 137]
     ];
 
-    let step_in_vector = vec![vec![0; 32], vec![102, 104, 122, 173, 248, 98, 189, 119, 108, 143, 193, 139, 142, 159, 142, 32, 8, 151, 20, 133, 110, 226, 51, 179, 144, 42, 89, 29, 13, 95, 41, 37]];
+    // TODO Replace this
+//    let step_in_vector = vec![vec![0; 32], vec![102, 104, 122, 173, 248, 98, 189, 119, 108, 143, 193, 139, 142, 159, 142, 32, 8, 151, 20, 133, 110, 226, 51, 179, 144, 42, 89, 29, 13, 95, 41, 37]];
 
-    let mut private_inputs = Vec::new();
+    let step_in_vector = vec![0; 32];
+    
+   let mut private_inputs = Vec::new();
     for i in 0..iteration_count {
         let mut private_input = HashMap::new();
         private_input.insert("in".to_string(), json!(in_vector[i]));
@@ -47,10 +50,10 @@ fn main() {
 
     println!("Private inputs: {:?}", private_inputs);
 
-    let flatten_array: Vec<_> = step_in_vector.iter().flatten().cloned().collect();
+ //   let flatten_array: Vec<_> = step_in_vector.iter().flatten().cloned().collect();
 
     // NOTE: Circom doesn't deal well with 2d arrays, so we flatten input
-    let start_public_input = flatten_array.into_iter().map(|x| F1::from(x)).collect::<Vec<_>>();
+    let start_public_input = step_in_vector.into_iter().map(|x| F1::from(x)).collect::<Vec<_>>();
 
     let pp = create_public_params(r1cs.clone());
 

@@ -106,16 +106,28 @@ template Main2() {
 
 template Main() {
     signal input in[32];
-    signal input hash[32];
-    signal output out[32];
+    
+    signal input step_in[32];
 
-    component chainedSha = RecursiveShaTest(32);
-    chainedSha.in <== in;
-    chainedSha.hash <== hash;
-    out <== chainedSha.out;
+    // signal input hash[32];
+
+    signal output step_out[32];
+
+    component hasher = Sha256Bytes(32);
+
+    hasher.in <== in;
+    in === step_in;
+    step_out <== hasher.out;
+
+    // // Can we write this but with step_in?
+    // // Private input is in, public input is hash, output is hash
+    // // Should work?
+    // component chainedSha = RecursiveShaTest(32);
+    // chainedSha.in <== in;
+    // chainedSha.hash <== hash;
+    // out <== chainedSha.out;
 
 }
 
 // render this file before compilation
-//component main { public [step_in] }= Main();
-component main = Main();
+component main { public [step_in] }= Main();

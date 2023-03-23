@@ -17,6 +17,8 @@ Can also generalize to Merkle Tree.
 
 Initially SHA256, but later on Keccak256.
 
+NOTE: Different curves
+
 ### Parameters
 
 - `n` preimage
@@ -28,3 +30,13 @@ Initially SHA256, but later on Keccak256.
 - Nova
 - Circom
 - Halo2?
+
+## How to run
+
+For Circom:
+
+`./circom/compile_circom.sh`
+
+For Nova:
+
+`(cd nova && cargo run --examples sha256_wasm --release)`
