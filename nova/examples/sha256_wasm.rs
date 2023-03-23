@@ -17,9 +17,9 @@ fn main() {
     let iteration_count = 5;
     let root = current_dir().unwrap();
 
-    let circuit_file = root.join("../circom/sha256_test_nova.r1cs");
+    let circuit_file = root.join("./examples/sha256/circom/sha256_test_nova.r1cs");
     let r1cs = load_r1cs(&FileLocation::PathBuf(circuit_file));
-    let witness_generator_wasm = root.join("../circom/sha256_test_nova_js/sha256_test_nova.wasm");
+    let witness_generator_wasm = root.join("./examples/sha256/circom/sha256_test_nova_js/sha256_test_nova.wasm");
 
     // TODO Generate this in Rust instead
     let in_vector = vec![

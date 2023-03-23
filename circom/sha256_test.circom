@@ -42,7 +42,6 @@ template Sha256Test(N) {
     }
     log("finish ================");
 }
-
  
 // TODO: Treat first iteration separately? For arbitrary input
 // N is the length of the input, K is the number of times to hash
@@ -69,35 +68,7 @@ template RecursiveShaTest(N) {
         value[i+1] <== hasher[i].out;
     }
 
-    // Off by 1?
     out <== value[depth];
-}
-
-template Main2() {
-
-    // Private input is the value to hash
-    signal input in[32];
-
-    // Public input is the input and then resulting hash
-    signal input step_in[2][32];
-
-    // Output is the hash of the previous step and expected hash of next step
-    signal output step_out[2][32];
-
-    // XXX: We want private input to be same as public input
-    in === step_in[0];
-
-    // First output is the hash of the private input
-    component firstHasher = Sha256Test(32);
-    firstHasher.in <== step_in[0];
-    firstHasher.hash <== step_in[1]; // this line fails
-    step_out[0] <== firstHasher.out;
-
-    // Second output is the hash of the hash of the private input
-    component secondHasher = Sha256Bytes(32);
-    secondHasher.in <== step_in[1];
-
-    step_out[1] <== secondHasher.out;
 }
 
 template Main() {
@@ -108,10 +79,10 @@ template Main() {
     component chainedSha = RecursiveShaTest(32);
     chainedSha.in <== in;
     chainedSha.hash <== hash;
+
+    // FIXME: The final outptu should be the inputed hash!
     out <== chainedSha.out;
 
 }
 
-// render this file before compilation
-//component main { public [step_in] }= Main();
 component main = Main();

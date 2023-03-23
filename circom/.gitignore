@@ -1,0 +1,9 @@
+node_modules
+sha256_test_cpp
+sha256_test_js
+sha256_test.r1cs
+sha256_test.sym
+sha256_test_nova_cpp
+sha256_test_nova_js
+sha256_test_nova.r1cs
+sha256_test_nova.sym

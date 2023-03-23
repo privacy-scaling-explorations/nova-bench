@@ -35,8 +35,11 @@ NOTE: Different curves
 
 For Circom:
 
-`./circom/compile_circom.sh`
+`./circom/compile.sh`
 
 For Nova:
 
-`(cd nova && cargo run --examples sha256_wasm --release)`
+```
+./nova/examples/sha256/circom/compile.sh
+(cd nova && cargo run --examples sha256_wasm --release)
+```

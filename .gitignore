@@ -1,9 +1,0 @@
-node_modules
-circom/sha256_test_cpp
-circom/sha256_test_js
-circom/sha256_test.r1cs
-circom/sha256_test.sym
-circom/sha256_test_nova_cpp
-circom/sha256_test_nova_js
-circom/sha256_test_nova.r1cs
-circom/sha256_test_nova.sym
