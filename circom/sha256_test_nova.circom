@@ -60,6 +60,10 @@ template RecursiveShaTest(N) {
 
     value[0] <== in;
 
+    // for (var i = 0; i < N; i++) {
+    //     value[0][i] <== in[i];
+    // }
+
     // Loop until DEPTH, taking output of Sha256 and using as input in next
     // Then ensure that the final output is the same as the expected hash
     for (var i = 0; i < depth; i++) {
