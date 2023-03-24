@@ -57,4 +57,4 @@ template Main(depth) {
     out <== chainedSha.out;
 }
 
-component main = Main(100);
+component main = Main(10);

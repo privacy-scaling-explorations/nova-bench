@@ -42,7 +42,7 @@ fn recursive_hashing(depth: usize) {
     end_timer!(timer_gen_hashes);
 
     let mut in_vector = vec![];
-    for i in 0..10 {
+    for i in 0..depth {
         in_vector.push(gen_nth_sha256_hash(i));
     }
  
