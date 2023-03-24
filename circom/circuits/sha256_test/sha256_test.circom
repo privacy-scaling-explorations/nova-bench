@@ -19,7 +19,7 @@
 
 pragma circom 2.0.3;
 
-include "sha256_bytes.circom";
+include "../sha256/sha256_bytes.circom";
  
 template RecursiveShaTest(N, depth) {
 
@@ -57,4 +57,4 @@ template Main(depth) {
     out <== chainedSha.out;
 }
 
-component main = Main(10);
+component main = Main(1);

@@ -1,8 +1,8 @@
 // From https://raw.githubusercontent.com/celer-network/zk-benchmark/main/circom/circuits/sha256/sha256_bytes.circom
 pragma circom 2.0.3;
 
-include "node_modules/circomlib/circuits/sha256/sha256.circom";
-include "node_modules/circomlib/circuits/bitify.circom";
+include "../../circomlib/circuits/sha256/sha256.circom";
+include "../../circomlib/circuits/bitify.circom";
 
 /**
  * Wrapper around SHA256 to support bytes as input instead of bits

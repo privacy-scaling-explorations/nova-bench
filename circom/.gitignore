@@ -7,3 +7,7 @@ sha256_test_nova_cpp
 sha256_test_nova_js
 sha256_test_nova.r1cs
 sha256_test_nova.sym
+
+*.ptau
+verification_key.json
+*.zkey
