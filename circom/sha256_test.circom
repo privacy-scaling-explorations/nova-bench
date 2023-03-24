@@ -20,35 +20,8 @@
 pragma circom 2.0.3;
 
 include "sha256_bytes.circom";
-
-// Identical to https://raw.githubusercontent.com/celer-network/zk-benchmark/main/circom/circuits/sha256_test/sha256_test.circom
-template Sha256Test(N) {
-
-    signal input in[N];
-    signal input hash[32];
-    signal output out[32];
-
-    component sha256 = Sha256Bytes(N);
-    sha256.in <== in;
-    out <== sha256.out;
-
-    for (var i = 0; i < 32; i++) {
-        out[i] === hash[i];
-    }
-
-    log("start ================");
-    for (var i = 0; i < 32; i++) {
-        log(out[i]);
-    }
-    log("finish ================");
-}
  
-// TODO Parameterize depth
-// TODO: Treat first iteration separately? For arbitrary input
-// N is the length of the input, K is the number of times to hash
-// Can only declare components inside conditions if condition is known at compile time, so removing k
-template RecursiveShaTest(N) {
-    var depth = 10;
+template RecursiveShaTest(N, depth) {
 
     signal input in[N];
     signal input hash[32];
@@ -60,8 +33,6 @@ template RecursiveShaTest(N) {
 
     value[0] <== in;
 
-    // Loop until DEPTH, taking output of Sha256 and using as input in next
-    // Then ensure that the final output is the same as the expected hash
     for (var i = 0; i < depth; i++) {
         hasher[i] = Sha256Bytes(N);
         hasher[i].in <== value[i];
@@ -72,12 +43,12 @@ template RecursiveShaTest(N) {
     out <== value[depth];
 }
 
-template Main() {
+template Main(depth) {
     signal input in[32];
     signal input hash[32];
     signal output out[32];
 
-    component chainedSha = RecursiveShaTest(32);
+    component chainedSha = RecursiveShaTest(32, depth);
     chainedSha.in <== in;
     chainedSha.hash <== hash;
 
@@ -86,4 +57,4 @@ template Main() {
     out <== chainedSha.out;
 }
 
-component main = Main();
+component main = Main(10);
