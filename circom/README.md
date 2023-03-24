@@ -1,11 +1,19 @@
-# SHA256
+# Circom
 
 ## Goal
 
 Create a benchmark for recursive variant of https://github.com/celer-network/zk-benchmark
 
+## Description
+
+Recursively hashes a 32 byte input k times using SHA256 in Circom.
+
+Uses forked version of Circom with Pasta curves (for better comparison with current Nova implementation): https://github.com/nalinbhardwaj/circom/tree/pasta
+
 ## To run
 
-`./examples/sha256/circom/compile.sh`
+`./groth16/test_sha256_groth16_macos.sh 1 17`
 
-`cargo run --example sha256_wasm --release`
+## Acknowledgements
+
+Testing structure taken from https://github.com/celer-network/zk-benchmark 
