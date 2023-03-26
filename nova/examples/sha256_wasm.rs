@@ -17,6 +17,12 @@ use serde_json::json;
 
 use sha2::{Sha256, Digest};
 
+extern crate wee_alloc;
+
+// Use `wee_alloc` as the global allocator.
+#[global_allocator]
+static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
+
 fn recursive_hashing(depth: usize) {
 
     println!{"Using depth: {:?}", depth};

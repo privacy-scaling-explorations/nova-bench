@@ -15,3 +15,4 @@ nova-snark = { version = "0.19.0" }
 serde = "1.0"
 serde_json = "1.0.85"
 sha2 = "0.10.6"
+wee_alloc = "0.4.5"
