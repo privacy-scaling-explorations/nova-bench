@@ -70,11 +70,12 @@ Run on Macbook Pro M1 Max (2021), 64GB memory
 
 ### n=100
 
-- Compiling starts to take a long time
-- Circuit too big for this power of tau ceremony. 2963600*2 > 2**17
-- => Need to download ptau23 (2**23=~8m) vs ~6m
-- Increases linearly
-- TODO: Download ptau23
+- Compiling starts to take a long time, circuits getting too big for reasonably ptau file
+- Increases linearly, e.g. need ptau23 (2**23=~8m) vs ~6m (3m\*2)
+- non-linear constraints: 2963600
+- mem 22014856.000000
+- time 62.510000
+- cpu 491.000000
 
 ## Nova
 
@@ -103,8 +104,6 @@ CompressedSNARK::prove: true, took 2.984685667s
 
 ### n=1000
 
-Segfault (?)
-
-`zsh: segmentation fault  cargo run --example sha256_wasm --release 1000`
+- segfault with wasm, need to run C++ prover (doesn't work on M1) or different allocator (wee_alloc?)
 
 - TODO: Figure out what is going on here
