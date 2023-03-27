@@ -104,6 +104,7 @@ CompressedSNARK::prove: true, took 2.984685667s
 
 ### n=1000
 
-- segfault with wasm, need to run C++ prover (doesn't work on M1) or different allocator (wee_alloc?)
+RecursiveSNARK creation took 239.474452666s
+CompressedSNARK::prove: true, took 17.342738166s
 
-- TODO: Figure out what is going on here
+segfault with wasm => run C++ prover prover (doesn't work on M1) or wee_alloc allocator (intermittent problems but seems to work)
