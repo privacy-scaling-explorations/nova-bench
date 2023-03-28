@@ -21,9 +21,10 @@ NOTE: Different curves
 
 ### Parameters
 
-- (`n` preimage)
 - `k` steps
-- `t` threads (or similar)
+- `t` paralleization/threads (or similar)
+
+(Ignoring `n` preimage size for now)
 
 ### Targets
 
@@ -33,78 +34,41 @@ NOTE: Different curves
 
 ## How to run
 
-For Circom:
+- Make sure update submodules first: `git submodule update --init --recursive`
+- You also need Circom setup with pasta curves, see https://github.com/nalinbhardwaj/Nova-Scotia#how
+
+For Circom benchmarks:
 
 `./circom/compile.sh`
 
 For Nova:
 
 ```
+(cd nova/examples/sha256/circom && npm install)
 ./nova/examples/sha256/circom/compile.sh
 (cd nova && cargo run --examples sha256_wasm --release)
 ```
 
 ## Initial results
 
-# Initial benchmarking
-
-## Hardware
+### Hardware
 
 Run on Macbook Pro M1 Max (2021), 64GB memory
 
-## Circom (proving)
+### Prover time
 
-### n=1
+| k     | Circom | Nova (total) | Nova (step sum) |
+|-------|--------|--------------|-----------------|
+| 1     | 0.3s   | 0.2s         | 0.1s            |
+| 10    | 7.3s   | 2.4s         | 1.2s            |
+| 100   | 62s    | 24s          | 12.5s           |
+| 1000  | -      | 240s         | 125s            |
 
-- 29636 non-linear constraints
-- mem 694691.200000
-- time 0.953000
-- cpu 378.800000
 
-### n=10
+### Notes
 
-- non-linear constraints: 296360
-- mem 148928.000000
-- time 0.282000
-- cpu 232.300000
-
-### n=100
-
-- Compiling starts to take a long time, circuits getting too big for reasonably ptau file
-- Increases linearly, e.g. need ptau23 (2**23=~8m) vs ~6m (3m\*2)
-- non-linear constraints: 2963600
-- mem 22014856.000000
-- time 62.510000
-- cpu 491.000000
-
-## Nova
-
-Number of constraints per step (primary circuit): 44176
-Number of constraints per step (secondary circuit): 10347
-
-(Same for all)
-
-### n=1
-
-RecursiveSNARK creation took 195.841458ms
-CompressedSNARK::prove: true, took 3.099014917s
-
-### n=10
-
-Number of constraints per step (primary circuit): 44176
-Number of constraints per step (secondary circuit): 10347
-
-RecursiveSNARK creation took 2.428390917s
-CompressedSNARK::prove: true, took 2.916614208s
-
-### n=100
-
-RecursiveSNARK creation took 24.352297666s
-CompressedSNARK::prove: true, took 2.984685667s
-
-### n=1000
-
-RecursiveSNARK creation took 239.474452666s
-CompressedSNARK::prove: true, took 17.342738166s
-
-segfault with wasm => run C++ prover prover (doesn't work on M1) or wee_alloc allocator (intermittent problems but seems to work)
+- Circom constrains grow O(k) from 30k, and thus runs out of powers of tau quickly (ptau23 needed for n=100, 3m constraints) - compilation starts to take a long tme on n=100 too
+- Nova's prove step time is ~120-130ms, without witness/WASM file overhead this is a factor of two - summing up each individual time we get a "step sum"
+- Nova only counts the recursive proof part not the SNARK verify part (currently done with Spartan using IPA-PC, not a huge overhead)
+- For Nova at n=1000 we sometimes get segfault with wasm => run C++ prover prover (doesn't work on M1) or wee_alloc allocator (intermittent problems work)
+- For Nova, number of constraints per step is constant at ~44k for primary circuit and ~10k for secondary
