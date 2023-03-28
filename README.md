@@ -21,9 +21,9 @@ NOTE: Different curves
 
 ### Parameters
 
-- (`n` preimage)
+- (`n` preimage) - ignoring for now
 - `k` steps
-- `t` threads (or similar)
+- `t` paralleization/threads (or similar)
 
 ### Targets
 
@@ -33,13 +33,17 @@ NOTE: Different curves
 
 ## How to run
 
-For Circom:
+- Make sure update submodules first: `git submodule update --init --recursive`
+- You also need Circom setup with pasta curves, see https://github.com/nalinbhardwaj/Nova-Scotia#how
+
+For Circom benchmarks:
 
 `./circom/compile.sh`
 
 For Nova:
 
 ```
+(cd nova/examples/sha256/circom && npm install)
 ./nova/examples/sha256/circom/compile.sh
 (cd nova && cargo run --examples sha256_wasm --release)
 ```
