@@ -57,7 +57,7 @@ Run on Macbook Pro M1 Max (2021), 64GB memory
 
 ### Prover time
 
-| n     | Circom | Nova (total) | Nova (step sum) |
+| k     | Circom | Nova (total) | Nova (step sum) |
 |-------|--------|--------------|-----------------|
 | 1     | 0.3s   | 0.2s         | 0.1s            |
 | 10    | 7.3s   | 2.4s         | 1.2s            |
@@ -67,7 +67,7 @@ Run on Macbook Pro M1 Max (2021), 64GB memory
 
 ### Notes
 
-- Circom constrains grow O(n) from 30k, and thus runs out of powers of tau quickly (ptau23 needed for n=100, 3m constraints) - compilation starts to take a long tme on n=100 too
+- Circom constrains grow O(k) from 30k, and thus runs out of powers of tau quickly (ptau23 needed for n=100, 3m constraints) - compilation starts to take a long tme on n=100 too
 - Nova's prove step time is ~120-130ms, without witness/WASM file overhead this is a factor of two - summing up each individual time we get a "step sum"
 - Nova only counts the recursive proof part not the SNARK verify part (currently done with Spartan using IPA-PC, not a huge overhead)
 - For Nova at n=1000 we sometimes get segfault with wasm => run C++ prover prover (doesn't work on M1) or wee_alloc allocator (intermittent problems work)
