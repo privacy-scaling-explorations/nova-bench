@@ -1,0 +1,16 @@
+[package]
+name = "halo2"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+ark-std = { version = "0.3", features = ["print-trace"] }
+halo2_proofs = { path = "./halo2/halo2_proofs", features = ["dev-graph"] }
+halo2_gadgets = { path = "./halo2/halo2_gadgets", features = ["unstable"] }
+rand = "0.8"
+plotters = "0.3"
+
+[features]
+default = []
