@@ -27,7 +27,6 @@ extern crate wee_alloc;
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
-// TODO: Clean up file with duplicate benchmarks, commented out code etc
 // TODO: Add naive Keccak circuit (check one step vs vanilla Circom)
 
 fn gen_nth_sha256_hash(n: usize) -> Vec<u8> {
@@ -40,8 +39,7 @@ fn gen_nth_sha256_hash(n: usize) -> Vec<u8> {
 }
 
 fn recursive_hashing(depth: usize) {
-
-    println!{"Using depth: {:?}", depth};
+    println!{"Using recursive depth: {:?}", depth};
 
     let iteration_count = depth;
     let root = current_dir().unwrap();
@@ -50,21 +48,12 @@ fn recursive_hashing(depth: usize) {
     let r1cs = load_r1cs(&FileLocation::PathBuf(circuit_file));
     let witness_generator_wasm = root.join("./examples/sha256/circom/sha256_test_nova_js/sha256_test_nova.wasm");
 
-    let timer_gen_hashes = start_timer!(|| "gen sha256 hashes");
-    end_timer!(timer_gen_hashes);
-
     let mut in_vector = vec![];
     for i in 0..depth {
         in_vector.push(gen_nth_sha256_hash(i));
     }
  
-    // println!("1st recursive SHA256 hash: {:?}", gen_nth_sha256_hash(1));
-    // println!("10th recursive SHA256 hash: {:?}", gen_nth_sha256_hash(10));
     // println!("100th recursive SHA256 hash: {:?}", gen_nth_sha256_hash(100));
-    // println!("10kth recursive SHA256 hash: {:?}", gen_nth_sha256_hash(1000));
-    // println!("10kth recursive SHA256 hash: {:?}", gen_nth_sha256_hash(10000));
-    // println!("100kth recursive SHA256 hash: {:?}", gen_nth_sha256_hash(100000));
-    // println!("1mth recursive SHA256 hash: {:?}", gen_nth_sha256_hash(1000000));
 
     let step_in_vector = vec![0; 32];
     
@@ -74,12 +63,6 @@ fn recursive_hashing(depth: usize) {
         private_input.insert("in".to_string(), json!(in_vector[i]));
         private_inputs.push(private_input);
     }
-
-    //println!("Private inputs: {:?}", private_inputs);
-
-    // XXX Possibly outdated
-    // let flatten_array: Vec<_> = step_in_vector.iter().flatten().cloned().collect();
-    // NOTE: Circom doesn't deal well with 2d arrays, so we flatten input
 
     let start_public_input = step_in_vector.into_iter().map(|x| F1::from(x)).collect::<Vec<_>>();
 
@@ -103,11 +86,8 @@ fn recursive_hashing(depth: usize) {
         pp.num_variables().1
     );
 
-    println!("Creating a RecursiveSNARK...");
-    let start = Instant::now();
-
-    let timer_create_proof = start_timer!(|| "Create recursive proof");
-
+    // create a recursive SNARK
+    let timer_create_proof = start_timer!(|| "Create RecursiveSNARK");
     let recursive_snark = create_recursive_circuit(
         FileLocation::PathBuf(witness_generator_wasm),
         r1cs,
