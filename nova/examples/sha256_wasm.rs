@@ -96,17 +96,15 @@ fn recursive_hashing(depth: usize) {
         &pp,
     )
     .unwrap();
-    println!("RecursiveSNARK creation took {:?}", start.elapsed());
-
     end_timer!(timer_create_proof);
 
     // TODO: empty?
     let z0_secondary = vec![<G2 as Group>::Scalar::zero()];
 
-    let timer_verify_snark = start_timer!(|| "verify SNARK");
 
     // verify the recursive SNARK
     println!("Verifying a RecursiveSNARK...");
+    let timer_verify_snark = start_timer!(|| "verify SNARK");
     let start = Instant::now();
     let res = recursive_snark.verify(
         &pp,
@@ -114,37 +112,22 @@ fn recursive_hashing(depth: usize) {
         start_public_input.clone(),
         z0_secondary.clone(),
     );
-    // println!(
-    //     "RecursiveSNARK::verify: {:?}, took {:?}",
-    //     res,
-    //     start.elapsed()
-    // );
     assert!(res.is_ok());
 
     end_timer!(timer_verify_snark);
 
-    let timer_gen_compressed_snark = start_timer!(|| "gen compressed snark");
 
 
     // produce a compressed SNARK
-    println!("Generating a CompressedSNARK using Spartan with IPA-PC...");
+    let timer_gen_compressed_snark = start_timer!(|| "Generate a CompressedSNARK using Spartan with IPA-PC");
     let start = Instant::now();
     let (pk, vk) = CompressedSNARK::<_, _, _, _, S1, S2>::setup(&pp).unwrap();
     let res = CompressedSNARK::<_, _, _, _, S1, S2>::prove(&pp, &pk, &recursive_snark);
-    println!(
-        "CompressedSNARK::prove: {:?}, took {:?}",
-        res.is_ok(),
-        start.elapsed()
-    );
     assert!(res.is_ok());
     let compressed_snark = res.unwrap();
-
     end_timer!(timer_gen_compressed_snark);
 
-    let timer_verify_compressed_snark = start_timer!(|| "verify compressed snark");
-
-    // verify the compressed SNARK
-    println!("Verifying a CompressedSNARK...");
+    let timer_verify_compressed_snark = start_timer!(|| "Verify CompressedSNARK");
     let start = Instant::now();
     let res = compressed_snark.verify(
         &vk,
@@ -152,12 +135,6 @@ fn recursive_hashing(depth: usize) {
         start_public_input.clone(),
         z0_secondary,
     );
-    println!(
-        "CompressedSNARK::verify: {:?}, took {:?}",
-        res.is_ok(),
-        start.elapsed()
-    );
-
     end_timer!(timer_verify_compressed_snark);
 
     assert!(res.is_ok());
