@@ -57,13 +57,12 @@ Run on Macbook Pro M1 Max (2021), 64GB memory
 
 ### Prover time
 
-| k     | Circom | Nova (total) | Nova (step sum) |
-|-------|--------|--------------|-----------------|
-| 1     | 0.3s   | 0.2s         | 0.1s            |
-| 10    | 7.3s   | 2.4s         | 1.2s            |
-| 100   | 62s    | 24s          | 12.5s           |
-| 1000  | -      | 240s         | 125s            |
-
+| k     | Circom | Nova (total) | Nova (step sum) | Halo 2 (KZG) |
+|-------|--------|--------------|-----------------|--------------|
+| 1     | 0.3s   | 0.2s         | 0.1s            | 0.8s         |
+| 10    | 7.3s   | 2.4s         | 1.2s            | 0.8s         |
+| 100   | 62s    | 24s          | 12.5s           | 1.6s         |
+| 1000  | -      | 240s         | 125s            | 25s          |
 
 ### Notes
 
@@ -72,3 +71,5 @@ Run on Macbook Pro M1 Max (2021), 64GB memory
 - Nova only counts the recursive proof part not the SNARK verify part (currently done with Spartan using IPA-PC, not a huge overhead)
 - For Nova at n=1000 we sometimes get segfault with wasm => run C++ prover prover (doesn't work on M1) or wee_alloc allocator (intermittent problems work)
 - For Nova, number of constraints per step is constant at ~44k for primary circuit and ~10k for secondary
+- Halo 2 with KZG is heavily optimized in many ways, so it isn't necessarily a fair comparison with naive Circom and current Nova implementation
+- Since Halo 2 is Plonkish and using look up tables, we need a lot fewer constraints
