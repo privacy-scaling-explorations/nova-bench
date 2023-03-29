@@ -4,7 +4,7 @@
 [submodule "circom/groth16/rapidsnark"]
 	path = circom/groth16/rapidsnark
 	url = https://github.com/iden3/rapidsnark.git
-[submodule "circom/groth16/rapidsnark"]
+[submodule "halo2/halo2"]
 	path = halo2/halo2
-	url = https://github.com/CPerezz/halo2
+	url = https://github.com/CPerezz/halo2.git
 	branch = sha256_recursive_benches
