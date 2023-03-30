@@ -738,6 +738,7 @@ dependencies = [
 [[package]]
 name = "nova-scotia"
 version = "0.2.2"
+source = "git+https://github.com/oskarth/Nova-Scotia.git?branch=benchmark-logging#1d9477e46f64867d7b78edf40c6db599ad8feaff"
 dependencies = [
  "anyhow",
  "ark-std",
