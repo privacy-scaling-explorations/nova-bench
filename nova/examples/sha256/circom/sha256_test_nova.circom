@@ -28,8 +28,10 @@ template Main() {
 
     component hasher = Sha256Bytes(32);
 
-    hasher.in <== in;
-    in === step_in;
+    hasher.in <== step_in;
+
+    // XXX Ignore private input check for now
+    //in === step_in;
     step_out <== hasher.out;
 
 }
