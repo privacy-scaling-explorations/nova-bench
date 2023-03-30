@@ -5,8 +5,8 @@ use std::{env, collections::HashMap, env::current_dir, time::Instant};
 use ff::PrimeField;
 use ff::derive::bitvec::vec;
 use nova_scotia::{
-    circom::reader::load_r1cs, create_public_params, create_recursive_circuit, FileLocation, F1,
-    G2, S1, S2,
+    circom::reader::load_r1cs, create_public_params, create_recursive_circuit, FileLocation, F1, F2,
+    G2, S1, S2, create_recursive_circuit_alt, create_public_params_alt,
 };
 
 use num_bigint::BigInt;
@@ -140,7 +140,6 @@ fn recursive_hashing(depth: usize) {
     assert!(res.is_ok());
 }
 
-
 // Primary and secondary circuit optimized inputs for more efficient folding
 fn recursive_hashing2(depth: usize) {
 
@@ -150,7 +149,11 @@ fn recursive_hashing2(depth: usize) {
     let root = current_dir().unwrap();
 
     let circuit_file = root.join("./examples/sha256/circom/sha256_test_nova2.r1cs");
+
+    // XXX Can we use the same here?
     let r1cs = load_r1cs(&FileLocation::PathBuf(circuit_file));
+    let r1cs_primary = load_r1cs(&FileLocation::PathBuf(circuit_file));
+    let r1cs_secondary = load_r1cs(&FileLocation::PathBuf(circuit_file));
     let witness_generator_wasm = root.join("./examples/sha256/circom/sha256_test_nova2_js/sha256_test_nova2.wasm");
 
     // XXX Should we only iterate over half? Since we do 0..n/2 and n/2..n at each step
@@ -160,7 +163,7 @@ fn recursive_hashing2(depth: usize) {
     // Confirm that we are doing half
     println!("half_depth: {}", half_depth);
 
-    // This is number od iterations
+    // This is number of iterations
      for i in 0..half_depth {
         in_vector.push(gen_nth_sha256_hash(i));
     }
@@ -168,19 +171,16 @@ fn recursive_hashing2(depth: usize) {
     // This is different, we want vec of vec, with second vec being n/2 hash
     let midpoint = gen_nth_sha256_hash(half_depth);
 
-    // XXX here atm
-
     // XXX: Issues with Vec<u8> / Vec<u64> conversion bleh
     let midpoint5 = vec![55, 109, 161, 31, 227, 171, 61, 14, 170, 221, 180, 24, 204, 180, 155, 84, 38, 213, 194, 80, 79, 82, 111, 119, 102, 88, 15, 110, 69, 152, 78, 59];
 
     println!("midpoint: {:?}", midpoint);
 
-    let step_in_vector = vec![vec![0; 32], midpoint5];
-
-    //let step_in_vector = vec![vec![0; 32], vec![0; 32]];
-
-    println!("step_in_vector: {:?}", step_in_vector);
+    //let step_in_vector = vec![vec![0; 32], midpoint5];
+    let step_in_vector_primary = vec![0; 32];
+    let step_in_vector_secondary = midpoint5;
     
+    // XXX Letting private input be the same
     let mut private_inputs = Vec::new();
     for i in 0..half_depth {
         let mut private_input = HashMap::new();
@@ -189,17 +189,14 @@ fn recursive_hashing2(depth: usize) {
     }
 
     // XXX Possibly outdated
-    let flatten_array: Vec<_> = step_in_vector.iter().flatten().cloned().collect();
+    // let flatten_array: Vec<_> = step_in_vector.iter().flatten().cloned().collect();
     // NOTE: Circom doesn't deal well with 2d arrays, so we flatten input
 
-    // XXX Not working for some reason
-    // start_public_input should be flatten_array but we need to convert to F1
-    let start_public_input = flatten_array.into_iter().map(|x| F1::from(x)).collect::<Vec<_>>();
+    let start_public_input_primary = step_in_vector_primary.into_iter().map(|x| F1::from(x)).collect::<Vec<_>>();
+    let start_public_input_secondary = step_in_vector_secondary.into_iter().map(|x| F2::from(x)).collect::<Vec<_>>();
   
-    // This worked before
-    //let start_public_input = step_in_vector.into_iter().map(|x| F1::from(x)).collect::<Vec<_>>();
-
-    let pp = create_public_params(r1cs.clone());
+    let pp = create_public_params_alt(r1cs_primary, r1cs_secondary);
+    //let pp = create_public_params_alt(r1cs.clone());
 
     println!(
         "Number of constraints per step (primary circuit): {}",
@@ -221,11 +218,14 @@ fn recursive_hashing2(depth: usize) {
 
     let timer_create_proof = start_timer!(|| "RecursiveSNARK creation");
 
-    let recursive_snark = create_recursive_circuit(
+    // XXX
+    let recursive_snark = create_recursive_circuit_alt(
         FileLocation::PathBuf(witness_generator_wasm),
-        r1cs,
+        r1cs_primary,
+        r1cs_secondary,
         private_inputs,
-        start_public_input.clone(),
+        start_public_input_primary.clone(),
+        start_public_input_secondary.clone(),
         &pp,
     )
     .unwrap();
@@ -261,8 +261,8 @@ fn recursive_hashing2(depth: usize) {
     let res = compressed_snark.verify(
         &vk,
         iteration_count,
-        start_public_input.clone(),
-        z0_secondary,
+        start_public_input_primary.clone(),
+        start_public_input_secondary.clone(),
     );
 
     end_timer!(timer_verify_compressed_snark);
@@ -276,6 +276,6 @@ fn main() {
     //let sha_block: u64 = args[2].parse().unwrap();
 
     // NOTE: Toggle here
-    recursive_hashing(k);
-    //recursive_hashing2(k);
+    //recursive_hashing(k);
+    recursive_hashing2(k);
 }

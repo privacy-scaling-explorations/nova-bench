@@ -10,8 +10,9 @@ ark-std = { version = "0.3", features = ["print-trace"] }
 ff = { version = "0.12.0", features = ["derive"]}
 num-bigint = { version = "0.4", features = ["serde", "rand"] }
 num-traits = "0.2.15"
-# nova-scotia = {path = "../../../nalinbhardwaj/nova-scotia/"}
+#nova-scotia = {path = "../../../nalinbhardwaj/nova-scotia/"}
 nova-scotia = {git = "https://github.com/oskarth/Nova-Scotia.git", branch="benchmark-logging"}
+#nova-scotia = {git = "https://github.com/oskarth/Nova-Scotia.git", branch="feat/r1cs-dual"}
 nova-snark = { version = "0.19.0" }
 serde = "1.0"
 serde_json = "1.0.85"
