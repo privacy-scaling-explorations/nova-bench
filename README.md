@@ -73,8 +73,8 @@ Hardware: Server with 72 cores and ~350GB RAM
 | k       | Circom | Nova (total) | Nova (step sum) | Halo 2 (KZG) |
 |---------|--------|--------------|-----------------|--------------|
 | 100     | ?      | ?            | ?            | 2.5s         |
-| 1000    | ?      | ?            | ?            | ?          |
-| 10000   | ?      | ?            | ?            | ?          |
+| 1000    | ?      | ?            | ?            | 41.6s          |
+| 10000   | ?      | ?            | ?            | 389.1s          |
 | 100000  | -      | ?            | ?            | ?          |
 
 
@@ -83,8 +83,8 @@ Hardware: Server with 72 cores and ~350GB RAM
 | k       | Circom | Nova (total) | Nova (step sum) | Halo 2 (KZG) |
 |---------|--------|--------------|-----------------|--------------|
 | 100     | ?      | ?            | ?            | 3.7GB         |
-| 1000    | ?      | ?            | ?            | ?          |
-| 10000   | ?      | ?            | ?            | ?          |
+| 1000    | ?      | ?            | ?            | 32GB          |
+| 10000   | ?      | ?            | ?            | 245GB          |
 | 100000  | -      | ?            | ?            | ?          |
 
 
@@ -97,3 +97,5 @@ Hardware: Server with 72 cores and ~350GB RAM
 - For Nova, number of constraints per step is constant at ~44k for primary circuit and ~10k for secondary
 - Halo 2 with KZG is heavily optimized in many ways, so it isn't necessarily a fair comparison with naive Circom and current Nova implementation
 - Since Halo 2 is Plonkish and using look up tables, we need a lot fewer constraints
+- 10,000 hashes for Halo2(KZG) took a trusted setup of size 25.
+- We aren't able to compute benchmarks for Halo2(KZG) for `NHashes = 100,000` as the memory will just not be enough in our server instance in AWS(which peaks at 319GB RAM)
