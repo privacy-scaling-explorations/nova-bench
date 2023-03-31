@@ -49,13 +49,13 @@ For Nova:
 (cd nova && cargo run --examples sha256_wasm --release)
 ```
 
-## Initial results
+## Benchmarks
 
-### Hardware
+### Powerful laptop
 
-Run on Macbook Pro M1 Max (2021), 64GB memory
+Hardware: Macbook Pro M1 Max (2021), 64GB memory
 
-### Prover time
+#### Prover time
 
 | k     | Circom | Nova (total) | Nova (step sum) | Halo 2 (KZG) |
 |-------|--------|--------------|-----------------|--------------|
@@ -63,6 +63,30 @@ Run on Macbook Pro M1 Max (2021), 64GB memory
 | 10    | 7.3s   | 2.4s         | 1.2s            | 0.8s         |
 | 100   | 62s    | 24s          | 12.5s           | 1.6s         |
 | 1000  | -      | 240s         | 125s            | 25s          |
+
+## Powerful server
+
+Hardware: Server with 72 cores and ~350GB RAM
+
+### Prover time
+
+| k       | Circom | Nova (total) | Nova (step sum) | Halo 2 (KZG) |
+|---------|--------|--------------|-----------------|--------------|
+| 100     | ?      | ?            | ?            | 2.5s         |
+| 1000    | ?      | ?            | ?            | ?          |
+| 10000   | ?      | ?            | ?            | ?          |
+| 100000  | -      | ?            | ?            | ?          |
+
+
+### Memory usage
+
+| k       | Circom | Nova (total) | Nova (step sum) | Halo 2 (KZG) |
+|---------|--------|--------------|-----------------|--------------|
+| 100     | ?      | ?            | ?            | 3.7GB         |
+| 1000    | ?      | ?            | ?            | ?          |
+| 10000   | ?      | ?            | ?            | ?          |
+| 100000  | -      | ?            | ?            | ?          |
+
 
 ### Notes
 
