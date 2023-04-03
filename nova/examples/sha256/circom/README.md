@@ -6,6 +6,6 @@ Create a benchmark for recursive variant of https://github.com/celer-network/zk-
 
 ## To run
 
-`./examples/sha256/circom/compile.sh`
+`./examples/sha256/circom/compile_vesta.sh`
 
 `cargo run --example sha256_wasm --release`
