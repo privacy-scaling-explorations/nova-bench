@@ -160,8 +160,11 @@ fn recursive_hashing_par(depth: usize) {
         root.join("./examples/sha256/circom/sha256_test_nova_js/sha256_test_nova.wasm");
 
     let mut in_vector = vec![];
-    for i in 0..depth {
-        in_vector.push(gen_nth_sha256_hash(i));
+    let mut hash: Vec<u8> = vec![0; 32];
+    for _ in 0..depth {
+        let new_hash = Sha256::digest(&hash);
+        hash = new_hash.as_slice().to_owned();
+        in_vector.push(new_hash);
     }
 
     // println!("100th recursive SHA256 hash: {:?}", gen_nth_sha256_hash(100));
@@ -171,7 +174,7 @@ fn recursive_hashing_par(depth: usize) {
     let mut private_inputs = Vec::new();
     for i in 0..iteration_count {
         let mut private_input = HashMap::new();
-        private_input.insert("in".to_string(), json!(in_vector[i]));
+        private_input.insert("in".to_string(), json!(*in_vector[i]));
         private_inputs.push(private_input);
     }
 
@@ -210,6 +213,7 @@ fn recursive_hashing_par(depth: usize) {
         r1cs_circom.clone(),
         private_inputs,
         depth,
+        // This is wrong and we should be passing all the PIs here.
         start_public_input.clone(),
     );
 
@@ -219,15 +223,16 @@ fn recursive_hashing_par(depth: usize) {
     };
     let secondary_circuit = TrivialTestCircuit::<<G2 as Group>::Scalar>::default();
 
+    let proving_time = start_timer!(|| "Proving time");
     let res = nova_snark::parallel_prover::par_digest_folds(
         pp,
         folds,
         primary_circuit,
         secondary_circuit,
-    )
-    .unwrap();
+    );
+    end_timer!(proving_time);
 
-    //assert!(res.is_ok());
+    assert!(res.is_ok());
 }
 
 // Primary and secondary circuit optimized inputs for more efficient folding
@@ -376,7 +381,7 @@ fn main() {
     //let sha_block: u64 = args[2].parse().unwrap();
 
     // NOTE: Toggle here
-    recursive_hashing(k);
+    //recursive_hashing(k);
     //recursive_hashing2(k);
-    //recursive_hashing_par(k);
+    recursive_hashing_par(k);
 }
