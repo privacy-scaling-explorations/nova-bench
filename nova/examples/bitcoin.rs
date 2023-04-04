@@ -362,10 +362,13 @@ fn bench_par(iteration_count: usize, per_iteration_count: usize) -> (Duration, D
 
 fn main() {
     // create benchmark file
-    let mut file = std::fs::File::create("examples/bitcoin/benchmark.csv").unwrap();
-    
-    file.write_all(b"iteration_count,per_iteration_count,prover_time,verifier_time\n")
+    let mut file_seq = std::fs::File::create("examples/bitcoin/benchmark_seq.csv").unwrap();
+    let mut file_par = std::fs::File::create("examples/bitcoin/benchmark_par.csv").unwrap();
+
+    file_seq.write_all(b"iteration_count,per_iteration_count,prover_time,verifier_time\n")
         .unwrap();
+    file_par.write_all(b"iteration_count,per_iteration_count,prover_time,verifier_time\n")
+    .unwrap();
     for i in 1..=5 {
         let j = 120 / i;
 
@@ -376,11 +379,12 @@ fn main() {
             .output()
             .expect("failed to execute process");
 
-
         let (prover_time, verifier_time) = bench_seq(j, i);
         let (prover_time, verifier_time) = bench_par(j, i);
 
-        file.write_all(format!("{},{},{:?},{:?}\n", j, i, prover_time, verifier_time).as_bytes())
+        file_seq.write_all(format!("{},{},{:?},{:?}\n", j, i, prover_time, verifier_time).as_bytes())
             .unwrap();
+        file_par.write_all(format!("{},{},{:?},{:?}\n", j, i, prover_time, verifier_time).as_bytes())
+        .unwrap();
     }
 }
