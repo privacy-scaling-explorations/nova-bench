@@ -379,12 +379,13 @@ fn main() {
             .output()
             .expect("failed to execute process");
 
-        let (prover_time, verifier_time) = bench_seq(j, i);
-        let (prover_time, verifier_time) = bench_par(j, i);
+        let (prover_time_seq, verifier_time_seq) = bench_seq(j, i);
+        let (prover_time_par, verifier_time_par) = bench_par(j, i);
 
-        file_seq.write_all(format!("{},{},{:?},{:?}\n", j, i, prover_time, verifier_time).as_bytes())
+        file_seq.write_all(format!("{},{},{:?},{:?}\n", j, i, prover_time_seq, verifier_time_seq).as_bytes())
             .unwrap();
-        file_par.write_all(format!("{},{},{:?},{:?}\n", j, i, prover_time, verifier_time).as_bytes())
+        
+        file_par.write_all(format!("{},{},{:?},{:?}\n", j, i, prover_time_par, verifier_time_par).as_bytes())
         .unwrap();
     }
 }
