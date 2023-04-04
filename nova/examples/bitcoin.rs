@@ -232,8 +232,6 @@ fn bench_par(iteration_count: usize, per_iteration_count: usize) -> (Duration, D
 
     // println!("{:?} {:?}", start_public_input, private_inputs);
 
-    let pp = create_public_params(r1cs_circom.clone());
-
     let pp_par: nova_snark::parallel_prover::PublicParams<
     G1,
     G2,
@@ -243,20 +241,20 @@ fn bench_par(iteration_count: usize, per_iteration_count: usize) -> (Duration, D
 
     println!(
         "Number of constraints per step (primary circuit): {}",
-        pp.num_constraints().0
+        pp_par.num_constraints().0
     );
     println!(
         "Number of constraints per step (secondary circuit): {}",
-        pp.num_constraints().1
+        pp_par.num_constraints().1
     );
 
     println!(
         "Number of variables per step (primary circuit): {}",
-        pp.num_variables().0
+        pp_par.num_variables().0
     );
     println!(
         "Number of variables per step (secondary circuit): {}",
-        pp.num_variables().1
+        pp_par.num_variables().1
     );
 
     // Sequential case
@@ -384,7 +382,7 @@ fn main() {
 
         file_seq.write_all(format!("{},{},{:?},{:?}\n", j, i, prover_time_seq, verifier_time_seq).as_bytes())
             .unwrap();
-        
+
         file_par.write_all(format!("{},{},{:?},{:?}\n", j, i, prover_time_par, verifier_time_par).as_bytes())
         .unwrap();
     }
