@@ -1,5 +1,7 @@
 # Recursive hashing benchmarks for ZK
 
+**NOTE: Here's the most up to date view of benchmarks https://hackmd.io/0gVClQ9IQiSXHYAK0Up9hg?view=**
+
 ## Goal
 
 Create rough benchmarks for Nova vs Circom / Halo2 for recursive hashing.
