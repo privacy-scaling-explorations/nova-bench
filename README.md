@@ -1,5 +1,7 @@
 # Recursive hashing benchmarks for ZK
 
+**NOTE: Here's the most up to date view of benchmarks https://hackmd.io/0gVClQ9IQiSXHYAK0Up9hg?view=**
+
 ## Goal
 
 Create rough benchmarks for Nova vs Circom / Halo2 for recursive hashing.
@@ -111,5 +113,5 @@ Hardware: Server with 72 cores and ~350GB RAM
 - For Nova, number of constraints per step is constant at ~44k for primary circuit and ~10k for secondary
 - Halo 2 with KZG is heavily optimized in many ways, so it isn't necessarily a fair comparison with naive Circom and current Nova implementation
 - Since Halo 2 is Plonkish and using look up tables, we need a lot fewer constraints
-- 10,000 hashes for Halo2(KZG) took a trusted setup of size 25.
+- 10,000 hashes for Halo2(KZG) took a trusted setup of size 25 (100 18, 1000 22)
 - We aren't able to compute benchmarks for Halo2(KZG) for `NHashes = 100,000` as the memory will just not be enough in our server instance in AWS(which peaks at 319GB RAM)
