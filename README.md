@@ -2,6 +2,8 @@
 
 Here's a list of some of the benchmarks we've been taking to better understand how Nova performs vs other proof systems.
 
+Live version: https://hackmd.io/0gVClQ9IQiSXHYAK0Up9hg?both=
+
 ## Recursive hashing
 
 Recursively hashing SHA256 k times. That is, computations of the form $h(h(h(h(h(x)))))$.
