@@ -139,7 +139,7 @@ fn recursive_hashing(depth: usize) {
 }
 
 fn recursive_hashing_par(depth: usize) {
-    println! {"Using recursive depth: {:?}", depth};
+    println! {"Using recursive depth: {:?} times depth_per_fold in circuit (default 10 or 100, check yourself! :D)", depth};
 
     let iteration_count = depth;
     let root = current_dir().unwrap();
