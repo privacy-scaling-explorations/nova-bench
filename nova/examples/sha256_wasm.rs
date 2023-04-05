@@ -45,7 +45,7 @@ fn gen_nth_sha256_hash(n: usize) -> Vec<u8> {
 }
 
 fn recursive_hashing(depth: usize) {
-    println! {"Using recursive depth: {:?}", depth};
+    println! {"Using recursive depth: {:?} times depth_per_fold in circuit (default 10 or 100, check yourself! :D)", depth};
 
     let iteration_count = depth;
     let root = current_dir().unwrap();
@@ -381,7 +381,7 @@ fn main() {
     //let sha_block: u64 = args[2].parse().unwrap();
 
     // NOTE: Toggle here
-    //recursive_hashing(k);
+    recursive_hashing(k);
     //recursive_hashing2(k);
-    recursive_hashing_par(k);
+    //recursive_hashing_par(k);
 }
