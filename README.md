@@ -18,7 +18,7 @@ With the same number of recursive hashes, just batching more in a single fold.
 
 Rationale: Similar to https://github.com/celer-network/zk-benchmark but doing hashing recursively to take advantage of Nova+IVC.
 
-Code: https://github.com/oskarth/recursive-hashing-bench
+Code: https://github.com/privacy-scaling-explorations/nova-bench
 
 #### Proving systems
 
